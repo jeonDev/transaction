@@ -1,4 +1,4 @@
-package com.tx.basic.core;
+package com.tx.core;
 
 import java.sql.*;
 
@@ -10,14 +10,12 @@ public class TransactionManager implements Transaction {
 
     private TransactionInfo transactionInfo;
 
-
-
     public TransactionManager(TransactionInfo transactionInfo) {
         this.transactionInfo = transactionInfo;
     }
 
     @Override
-    public Connection getConnection() {
+    public Connection connect() {
         System.out.println("TransactionManager Connect");
         try {
             Class.forName(transactionInfo.getDriver());
@@ -32,20 +30,27 @@ public class TransactionManager implements Transaction {
 
     @Override
     public PreparedStatement execute() {
-        return null;
+        return ps;
     }
 
     @Override
     public ResultSet result() {
-        return null;
+        return rs;
     }
 
     @Override
     public void close() {
         try {
-            c.close();
+            if(rs != null) rs.close();
+            if(ps != null) ps.close();
+            if(c  != null)  c.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public Connection getConnection() {
+        return this.c;
     }
 }

@@ -1,4 +1,4 @@
-package com.tx.basic.core;
+package com.tx.core;
 
 public class TransactionInfo {
     private String driver;
