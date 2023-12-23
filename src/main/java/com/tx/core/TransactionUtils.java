@@ -4,8 +4,6 @@ public class TransactionUtils {
     private static TransactionSync transactionSync;
 
     private TransactionUtils() {
-        transactionSync = new TransactionSyncManager(
-                new TransactionInfo("org.h2.Driver", "jdbc:h2:mem:testdb", "sa", ""));
     }
 
     public static TransactionSync getInstance() {
@@ -17,5 +15,9 @@ public class TransactionUtils {
 
     public TransactionSync getTransactionSync() {
         return transactionSync;
+    }
+
+    public static void setTransactionSync(TransactionSync transactionSync) {
+        TransactionUtils.transactionSync = transactionSync;
     }
 }

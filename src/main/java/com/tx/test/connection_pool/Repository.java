@@ -1,4 +1,4 @@
-package com.tx.test.basic;
+package com.tx.test.connection_pool;
 
 import com.tx.core.Transaction;
 import com.tx.core.TransactionSync;
@@ -28,8 +28,8 @@ public class Repository {
             System.out.println(e);
             throw new RuntimeException(e);
         } finally {
-            if(ps != null) ps.close();
             if(rs != null) rs.close();
+            if(ps != null) ps.close();
         }
     }
     public void insert(int accountSeq, int amount) throws SQLException {
@@ -49,8 +49,8 @@ public class Repository {
             System.out.println(e);
             throw new RuntimeException(e);
         } finally {
-            if(ps != null) ps.close();
             if(rs != null) rs.close();
+            if(ps != null) ps.close();
         }
     }
 
@@ -75,8 +75,8 @@ public class Repository {
             System.out.println(e);
             throw new RuntimeException(e);
         } finally {
-            if(ps != null) ps.close();
             if(rs != null) rs.close();
+            if(ps != null) ps.close();
         }
         return list;
     }

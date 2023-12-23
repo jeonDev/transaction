@@ -4,6 +4,9 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+/**
+ * DB Transaction Proxy
+ */
 public class TransactionProxy implements InvocationHandler {
 
     private final Object target;
@@ -32,8 +35,8 @@ public class TransactionProxy implements InvocationHandler {
             }
             throw targetException;
         } finally {
-            // TODO: 현재는 각 요청(Proxy) 마다 Connection을 관리하는데, Connection Pool로 관리를 하게 되면 객체 반환을 하지 않아도 됨.
-            transaction.close();
+            // TODO: Connection Pool 반환 시점을 언제로 잡아야 할지..
+//            transaction.close();
             System.out.println("Transaction Proxy Close");
         }
         return result;

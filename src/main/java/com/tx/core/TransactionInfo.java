@@ -1,10 +1,13 @@
 package com.tx.core;
 
+/**
+ * DB Connection Info
+ */
 public class TransactionInfo {
-    private String driver;
-    private String url;
-    private String id;
-    private String password;
+    private String driver;      // DB Driver Class Info
+    private String url;         // DB Connection URL
+    private String id;          // DB Connection ID
+    private String password;    // DB Connection Password
 
     public TransactionInfo(String driver, String url, String id, String password) {
         this.driver = driver;

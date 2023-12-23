@@ -13,11 +13,11 @@ import java.util.List;
 
 public class Repository {
 
-    public void create() {
+    public void create() throws SQLException {
         TransactionSync transactionSync = TransactionUtils.getInstance();
         Transaction transaction = transactionSync.getTransaction();
-        PreparedStatement ps = transaction.execute();
-        ResultSet rs = transaction.result();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
         Connection connection = transaction.getConnection();
 
         try {
@@ -27,13 +27,16 @@ public class Repository {
         } catch (SQLException e) {
             System.out.println(e);
             throw new RuntimeException(e);
+        } finally {
+            if(rs != null) rs.close();
+            if(ps != null) ps.close();
         }
     }
-    public void insert(int accountSeq, int amount) {
+    public void insert(int accountSeq, int amount) throws SQLException {
         TransactionSync transactionSync = TransactionUtils.getInstance();
         Transaction transaction = transactionSync.getTransaction();
-        PreparedStatement ps = transaction.execute();
-        ResultSet rs = transaction.result();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
         Connection connection = transaction.getConnection();
 
         try {
@@ -45,14 +48,17 @@ public class Repository {
         } catch (SQLException e) {
             System.out.println(e);
             throw new RuntimeException(e);
+        } finally {
+            if(rs != null) rs.close();
+            if(ps != null) ps.close();
         }
     }
 
-    public List<Account> select() {
+    public List<Account> select() throws SQLException {
         TransactionSync transactionSync = TransactionUtils.getInstance();
         Transaction transaction = transactionSync.getTransaction();
-        PreparedStatement ps = transaction.execute();
-        ResultSet rs = transaction.result();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
         Connection connection = transaction.getConnection();
         List<Account> list = new ArrayList<>();
 
@@ -68,6 +74,9 @@ public class Repository {
         } catch (SQLException e) {
             System.out.println(e);
             throw new RuntimeException(e);
+        } finally {
+            if(rs != null) rs.close();
+            if(ps != null) ps.close();
         }
         return list;
     }

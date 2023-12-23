@@ -1,7 +1,9 @@
 package com.tx.core;
 
+import java.sql.Connection;
+
 public interface TransactionSync {
-    void begin();
+    Connection begin();
     void commit();
     void rollback();
     void close();

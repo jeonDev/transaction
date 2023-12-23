@@ -5,9 +5,6 @@ import java.sql.*;
 public class TransactionManager implements Transaction {
 
     private Connection c;
-    private PreparedStatement ps;
-    private ResultSet rs;
-
     private TransactionInfo transactionInfo;
 
     public TransactionManager(TransactionInfo transactionInfo) {
@@ -31,21 +28,9 @@ public class TransactionManager implements Transaction {
     }
 
     @Override
-    public PreparedStatement execute() {
-        return ps;
-    }
-
-    @Override
-    public ResultSet result() {
-        return rs;
-    }
-
-    @Override
     public void close() {
         try {
-            if(rs != null) rs.close();
-            if(ps != null) ps.close();
-            if(c  != null)  c.close();
+            if(c != null) c.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

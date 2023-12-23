@@ -2,13 +2,16 @@ package com.tx.core;
 
 import java.sql.Connection;
 
+/**
+ * Transaction Synchronization Manager
+ */
 public class TransactionSyncManager implements TransactionSync {
 
     private final ThreadLocal<Transaction> transactionThread = new ThreadLocal<>();
-    private final TransactionInfo transactionInfo;
+    private final DBConnectionPool connectionPool;
 
-    public TransactionSyncManager(TransactionInfo transactionInfo) {
-        this.transactionInfo = transactionInfo;
+    public TransactionSyncManager(DBConnectionPool connectionPool) {
+        this.connectionPool = connectionPool;
     }
 
     /**
@@ -17,16 +20,15 @@ public class TransactionSyncManager implements TransactionSync {
      * 2. autoCommit : false
      */
     @Override
-    public void begin() {
+    public Connection begin() {
         try {
             Transaction transaction = this.getTransaction();
             if(transaction == null) {
-                TransactionManager transactionManager = new TransactionManager(transactionInfo);
-                transactionThread.set(transactionManager);
-                transaction = this.getTransaction();
+                transaction = connectionPool.get();
+                transactionThread.set(transaction);
             }
-            Connection connect = transaction.connect();
-            connect.setAutoCommit(false);
+            Connection connect = transaction.getConnection();
+            return connect;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -61,9 +63,8 @@ public class TransactionSyncManager implements TransactionSync {
      */
     @Override
     public void close() {
-        Transaction transaction = this.getTransaction();
-        transaction.close();
-        transactionThread.remove();
+        this.connectionPool.connectOff(this.getTransaction()); // Connection Pool 반환
+        transactionThread.remove();     // ThreadLocal 초기화
     }
 
     @Override

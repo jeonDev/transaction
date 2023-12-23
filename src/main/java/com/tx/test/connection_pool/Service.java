@@ -1,4 +1,4 @@
-package com.tx.test.proxy;
+package com.tx.test.connection_pool;
 
 import java.sql.SQLException;
 
