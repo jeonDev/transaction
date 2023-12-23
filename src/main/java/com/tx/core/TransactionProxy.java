@@ -32,6 +32,7 @@ public class TransactionProxy implements InvocationHandler {
             }
             throw targetException;
         } finally {
+            // TODO: 현재는 각 요청(Proxy) 마다 Connection을 관리하는데, Connection Pool로 관리를 하게 되면 객체 반환을 하지 않아도 됨.
             transaction.close();
             System.out.println("Transaction Proxy Close");
         }
