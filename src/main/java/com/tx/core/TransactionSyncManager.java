@@ -19,9 +19,13 @@ public class TransactionSyncManager implements TransactionSync {
     @Override
     public void begin() {
         try {
-            TransactionManager transactionManager = new TransactionManager(transactionInfo);
-            this.transactionThread.set(transactionManager);
-            Connection connect = this.transactionThread.get().connect();
+            Transaction transaction = this.getTransaction();
+            if(transaction == null) {
+                TransactionManager transactionManager = new TransactionManager(transactionInfo);
+                transactionThread.set(transactionManager);
+                transaction = this.getTransaction();
+            }
+            Connection connect = transaction.connect();
             connect.setAutoCommit(false);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -64,6 +68,6 @@ public class TransactionSyncManager implements TransactionSync {
 
     @Override
     public Transaction getTransaction() {
-        return this.transactionThread != null ? this.transactionThread.get() : null;
+        return transactionThread.get();
     }
 }

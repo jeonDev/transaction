@@ -17,15 +17,17 @@ public class TransactionManager implements Transaction {
     @Override
     public Connection connect() {
         System.out.println("TransactionManager Connect");
+        if(c != null) return this.getConnection();
+
         try {
             Class.forName(transactionInfo.getDriver());
             c = DriverManager.getConnection(transactionInfo.getUrl(), transactionInfo.getId(), transactionInfo.getPassword());
+            return c;
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return c;
     }
 
     @Override
