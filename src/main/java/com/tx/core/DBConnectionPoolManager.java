@@ -11,18 +11,12 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class DBConnectionPoolManager implements DBConnectionPool {
     private final Queue<Transaction> connectionPool = new ConcurrentLinkedQueue<>();
     private static final int MAX_CONNECTION_POOL_SIZE = 10;
+    private static final int RETRY_CONNECT = 100;
 
     public DBConnectionPoolManager(TransactionInfo transactionInfo, int connectionPoolSize) {
         for(int i = 0; i < connectionPoolSize; i++) {
-            try {
-                Transaction transaction = new TransactionManager(transactionInfo);
-                Connection connect = transaction.connect();
-                connect.setAutoCommit(false);
-                if(!connectionPool.offer(transaction)) transaction.close(); // Connection Pool 세팅이 안될 경우 Connection Close
-            } catch (SQLException e) {
-                if(!connectionPool.isEmpty()) this.reset();
-                throw new RuntimeException(e);
-            }
+            Transaction transaction = new TransactionManager(transactionInfo);
+            if(!connectionPool.offer(transaction)) transaction.close(); // Connection Pool 세팅이 안될 경우 Connection Close
         }
     }
 
@@ -33,12 +27,32 @@ public class DBConnectionPoolManager implements DBConnectionPool {
     @Override
     public Transaction get() {
         System.out.println("get : " + connectionPool.size());
-        return connectionPool.poll();
+        if(!connectionPool.isEmpty())
+            return connectionPool.poll();
+
+        // Connection Pool 에 Transaction 이 존재 하지 않을 경우 재 시도
+        try {
+            Thread.sleep(RETRY_CONNECT);
+            return this.get();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public void connectOff(Transaction transaction) {
-        if(!connectionPool.offer(transaction)) transaction.close(); // Connection Pool 세팅이 안될 경우 Connection Close
+        if(transaction != null) {
+            try {
+                transaction.getConnection().setAutoCommit(true);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        // Connection Pool 세팅이 안될 경우 Connection Close
+        if(!connectionPool.offer(transaction)) {
+            transaction.close();
+        }
     }
 
     @Override

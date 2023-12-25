@@ -23,11 +23,16 @@ public class Execute {
             proxy.execute();
         } catch (Exception e) {
             e.printStackTrace();
+            List<Account> list = repository.select();
+            if(list.isEmpty()) System.out.println("데이터 없음");
+            else {
+                for(Account account : list) {
+                    System.out.println("데이터 : " + account.getAccountSeq() + " : " + account.getAmount());
+                }
+            }
         }
-        List<Account> list = repository.select();
-        for(Account account : list) {
-            System.out.println(account.getAccountSeq() + " : " + account.getAmount());
-        }
+
+
 
 //        connectionPool.get();
 //        connectionPool.connectOff();

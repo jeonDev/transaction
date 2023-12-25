@@ -15,10 +15,9 @@ public class Repository {
 
     public void create() throws SQLException {
         TransactionSync transactionSync = TransactionUtils.getInstance();
-        Transaction transaction = transactionSync.getTransaction();
+        Connection connection = transactionSync.getTransaction().getConnection();
         PreparedStatement ps = null;
         ResultSet rs = null;
-        Connection connection = transaction.getConnection();
 
         try {
             String sql = "CREATE TABLE ACCOUNT (ACCOUNT_SEQ NUMBER PRIMARY KEY , AMOUNT NUMBER)";
@@ -30,14 +29,14 @@ public class Repository {
         } finally {
             if(rs != null) rs.close();
             if(ps != null) ps.close();
+            transactionSync.close();
         }
     }
     public void insert(int accountSeq, int amount) throws SQLException {
         TransactionSync transactionSync = TransactionUtils.getInstance();
-        Transaction transaction = transactionSync.getTransaction();
+        Connection connection = transactionSync.getTransaction().getConnection();
         PreparedStatement ps = null;
         ResultSet rs = null;
-        Connection connection = transaction.getConnection();
 
         try {
             String sql = "INSERT INTO ACCOUNT VALUES(?, ?)";
@@ -51,15 +50,15 @@ public class Repository {
         } finally {
             if(rs != null) rs.close();
             if(ps != null) ps.close();
+            transactionSync.close();
         }
     }
 
     public List<Account> select() throws SQLException {
         TransactionSync transactionSync = TransactionUtils.getInstance();
-        Transaction transaction = transactionSync.getTransaction();
+        Connection connection = transactionSync.getTransaction().getConnection();
         PreparedStatement ps = null;
         ResultSet rs = null;
-        Connection connection = transaction.getConnection();
         List<Account> list = new ArrayList<>();
 
         try {
@@ -77,6 +76,7 @@ public class Repository {
         } finally {
             if(rs != null) rs.close();
             if(ps != null) ps.close();
+            transactionSync.close();
         }
         return list;
     }
