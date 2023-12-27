@@ -29,7 +29,7 @@ public class Repository {
         } finally {
             if(rs != null) rs.close();
             if(ps != null) ps.close();
-            transactionSync.close();
+            // transactionSync.close();
         }
     }
     public void insert(int accountSeq, int amount) throws SQLException {
@@ -50,7 +50,7 @@ public class Repository {
         } finally {
             if(rs != null) rs.close();
             if(ps != null) ps.close();
-            transactionSync.close();
+            // transactionSync.close();
         }
     }
 
@@ -76,7 +76,7 @@ public class Repository {
         } finally {
             if(rs != null) rs.close();
             if(ps != null) ps.close();
-            transactionSync.close();
+            // transactionSync.close();
         }
         return list;
     }

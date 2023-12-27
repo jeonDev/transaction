@@ -66,7 +66,6 @@ public class TransactionSyncManager implements TransactionSync {
     @Override
     public Transaction getTransaction() {
         Transaction transaction = transactionThread.get();
-        // TODO: ThreadLocal에 값이 들어있음. 왜인지 확인 필요.
         if(transaction == null) {
             transaction = connectionPool.get();
             transactionThread.set(transaction);

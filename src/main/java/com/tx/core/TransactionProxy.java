@@ -35,7 +35,7 @@ public class TransactionProxy implements InvocationHandler {
             }
             throw targetException;
         } finally {
-            transactionSync.close();
+            // transactionSync.close();
             System.out.println("Transaction Proxy Close");
         }
         return result;

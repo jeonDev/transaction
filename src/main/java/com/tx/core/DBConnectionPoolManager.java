@@ -16,6 +16,7 @@ public class DBConnectionPoolManager implements DBConnectionPool {
     public DBConnectionPoolManager(TransactionInfo transactionInfo, int connectionPoolSize) {
         for(int i = 0; i < connectionPoolSize; i++) {
             Transaction transaction = new TransactionManager(transactionInfo);
+            transaction.connect();
             if(!connectionPool.offer(transaction)) transaction.close(); // Connection Pool 세팅이 안될 경우 Connection Close
         }
     }
@@ -31,6 +32,7 @@ public class DBConnectionPoolManager implements DBConnectionPool {
             return connectionPool.poll();
 
         // Connection Pool 에 Transaction 이 존재 하지 않을 경우 재 시도
+        // TODO: 최대 연결 횟수 필요.
         try {
             Thread.sleep(RETRY_CONNECT);
             return this.get();
